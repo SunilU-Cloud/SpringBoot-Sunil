@@ -7,6 +7,8 @@ import com.sandy.product.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
@@ -18,5 +20,22 @@ public class CategoryServiceImpl implements CategoryService {
         Category category =CategoryMapper.toCategoryEntity(categoryDTO);
         category=categoryRepository.save(category);
         return CategoryMapper.toCategoryDTO(category);
+    }
+
+    @Override
+    public List<CategoryDTO> getAllCategories() {
+        return  categoryRepository.findAll().stream().map(CategoryMapper::toCategoryDTO).toList();
+    }
+
+    @Override
+    public CategoryDTO getCategoryById(Long id) {
+         Category category=categoryRepository.findById(id).orElseThrow(()-> new RuntimeException("Category not found"));
+         return CategoryMapper.toCategoryDTO(category);
+    }
+
+    @Override
+    public String deleteCategory(Long id) {
+        categoryRepository.deleteById(id);
+        return "Category "+ id +" has been deleted!";
     }
 }
