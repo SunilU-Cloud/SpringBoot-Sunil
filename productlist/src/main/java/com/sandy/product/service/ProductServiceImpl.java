@@ -47,5 +47,32 @@ public class ProductServiceImpl implements ProductService{
 
     }
 
+    @Override
+    public ProductDTO getProductById(Long id) {
+        Product product=productRepository.findById(id)
+                .orElseThrow(()->new RuntimeException("Product not found!"));
+        return ProductMapper.toProductDTO(product);
+    }
+
+    @Override
+    public ProductDTO updateProduct(ProductDTO productDTO, Long id) {
+        Product product=productRepository.findById(id)
+                .orElseThrow(()->new RuntimeException("Product not found!"));
+        Category category=categoryRepository.findById(productDTO.getCategoryId())
+                .orElseThrow(()->new RuntimeException("Category not found!"));
+        product.setName(productDTO.getName());
+        product.setDescription(productDTO.getDescription());
+        product.setPrice(productDTO.getPrice());
+        product.setCategory(category);
+        productRepository.save(product);
+        return ProductMapper.toProductDTO(product);
+    }
+
+    @Override
+    public String deleteProduct(Long id) {
+        productRepository.deleteById(id);
+        return "Product "+id+" has been deleted!";
+    }
+
 
 }
