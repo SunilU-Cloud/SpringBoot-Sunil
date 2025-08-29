@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,6 +46,7 @@ public class ProductController {
             responseCode = "201",
             description = "CREATED"
     )
+     @PreAuthorize("hasAuthority('ROLE_SELLER')")
      @PostMapping
      public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO){
         return new ResponseEntity<>(productService.createProduct(productDTO), HttpStatus.CREATED) ;
@@ -54,6 +56,7 @@ public class ProductController {
             summary = "Update Product By id",
             description = "REST API to update product by id"
     )
+    @PreAuthorize("hasAuthority('ROLE_SELLER')")
     @PutMapping("/{id}")
     public ResponseEntity<ProductDTO>updateProduct(@RequestBody ProductDTO productDTO, @PathVariable Long id ){
         return new ResponseEntity<>(productService.updateProduct(productDTO,id),HttpStatus.OK);
@@ -73,6 +76,7 @@ public class ProductController {
             summary = "Delete Products By id",
             description = "REST API to Delete product by id"
     )
+    @PreAuthorize("hasAuthority('ROLE_SELLER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String>deleteProduct(@PathVariable Long id){
         return new ResponseEntity<>(productService.deleteProduct(id),HttpStatus.OK);
