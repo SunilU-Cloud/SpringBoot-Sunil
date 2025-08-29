@@ -4,6 +4,7 @@ import com.sandy.product.dto.CategoryDTO;
 import com.sandy.product.dto.ProductDTO;
 import com.sandy.product.entity.Category;
 import com.sandy.product.entity.Product;
+import com.sandy.product.exception.CategoryNotFoundException;
 import com.sandy.product.mapper.ProductMapper;
 import com.sandy.product.repository.CategoryRepository;
 import com.sandy.product.repository.ProductRepository;
@@ -26,11 +27,9 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ProductDTO createProduct(ProductDTO productDTO) {
-        /**
-         *   id , name , description , price, categoryId
-         * **/
+
         Category category =categoryRepository.findById(productDTO.getCategoryId())
-                 .orElseThrow(()->new RuntimeException("Category not found!"));
+                 .orElseThrow(()->new CategoryNotFoundException("Category "+ productDTO.getCategoryId()+" not found!"));
 
         //DTO -> Entity
         Product product =ProductMapper.toProductEntity(productDTO,category);
